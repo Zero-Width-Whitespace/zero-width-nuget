@@ -10,7 +10,6 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  displayName: 'Initial Build'
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
@@ -25,6 +24,12 @@ steps:
     restoreSolution: '**/*.sln'
     feedsToUse: 'select'
     vstsFeed: '030285f2-9ddf-4603-8fd3-7d2f5b4a3766/acb34b7f-6641-4c4f-a2ee-ff1c27d5f61d'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
 
 - task: NuGetCommand@2
   displayName: 'Nuget Pack'
