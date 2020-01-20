@@ -27,6 +27,22 @@ namespace ZeroWidthApi
             return binaryString;
         }
         
+        private string BinaryToString(string binaryString)
+        {
+            string binNoSpace = binaryString.Replace(" ", "");
+            string plainResult = "";
+
+            while (binNoSpace.Length > 0)
+            {
+                var first8 = binNoSpace.Substring(0, 8);
+                binNoSpace = binNoSpace.Substring(8);
+                var number = Convert.ToInt32(first8, 2);
+                plainResult += (char)number;
+            }
+
+            return plainResult;
+        }
+
         public string Encode(string str)
         {
             string binString = ToBinaryString(str);
@@ -87,7 +103,8 @@ namespace ZeroWidthApi
                 }
             }
 
-            return string.Join("", result);
+            return BinaryToString(string.Join("", result));           
         }
+
     }        
 }
