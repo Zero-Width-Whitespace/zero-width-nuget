@@ -5,28 +5,45 @@ using System.Linq;
 namespace ZeroWidthApi
 {
     /// <summary>
-    /// Main class for the encoding of the plaintext recieved from the site or app
+    /// Main class for the encoding and decoding of the plaintext and zero width whitespace recieved from the site or app
     /// </summary>
     public class Coder
     {
         /// <summary>
-        ///  !!!!! Needs input!
+        ///  Converts a plaintext string to a byte array.
         /// </summary>
-        /// <returns></returns>        
+        /// <returns> A byte array derived from a plaintext string </returns>        
         private byte[] ConvertToByteArray(string str, System.Text.Encoding encoding)
         {
             return encoding.GetBytes(str);
         }
+
+        /// <summary>
+        /// The function takes a byte array and converts it to a binary string.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns> A string containing the binary text. </returns>
         private string ToBinary(Byte[] data)
         {
             return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
         }
+
+        /// <summary>
+        /// The function takes a plaintext string and converts it to a binary string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns> A string containing binary </returns>
         private string ToBinaryString(string str)
         {
             string binaryString = ToBinary(ConvertToByteArray(str, System.Text.Encoding.UTF8));
             return binaryString;
         }
-        
+
+        /// <summary>
+        /// Takes the binary string output and converts it to regular plaintext.
+        /// </summary>
+        /// <param name="binaryString"></param>
+        /// <returns> A plaintext string containing the decoded text </returns>
         private string BinaryToString(string binaryString)
         {
             string binNoSpace = binaryString.Replace(" ", "");
@@ -43,6 +60,11 @@ namespace ZeroWidthApi
             return plainResult;
         }
 
+        /// <summary>
+        /// Recieves the plaintext and converts it to binary, and is then converted to zero width whitespace characters.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns> A string containing zero width characters </returns>
         public string Encode(string str)
         {
             string binString = ToBinaryString(str);
@@ -71,6 +93,11 @@ namespace ZeroWidthApi
             return string.Join("", zeroWidthList);
         }
 
+        /// <summary>
+        /// Decodes zero width text while ignoring plaintext.
+        /// </summary>
+        /// <param name="zeroWidthText"></param>
+        /// <returns> The decoded plaintext</returns>
         public string Decode(string zeroWidthText)
         {
             List<char> filtered = new List<char>();
