@@ -10,6 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  displayName: 'Initial Build'
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
@@ -18,20 +19,27 @@ steps:
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
+  displayName: 'Nuget Restore'
   inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    vstsFeed: '030285f2-9ddf-4603-8fd3-7d2f5b4a3766/acb34b7f-6641-4c4f-a2ee-ff1c27d5f61d'
 
 - task: NuGetCommand@2
+  displayName: 'Nuget Pack'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj'
+    versioningScheme: 'byPrereleaseNumber'
+    majorVersion: '1'
+    minorVersion: '0'
+    patchVersion: '0'
+
+- task: NuGetCommand@2
+  displayName: 'Nuget Publish'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'Tobias'' Nuget Server'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '030285f2-9ddf-4603-8fd3-7d2f5b4a3766/acb34b7f-6641-4c4f-a2ee-ff1c27d5f61d'
