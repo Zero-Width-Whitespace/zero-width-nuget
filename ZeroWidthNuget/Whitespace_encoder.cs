@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ZeroWidthApi
 {
@@ -47,17 +48,17 @@ namespace ZeroWidthApi
         private string BinaryToString(string binaryString)
         {
             string binNoSpace = binaryString.Replace(" ", "");
-            string plainResult = "";
+            StringBuilder plainResult = new StringBuilder();
 
             while (binNoSpace.Length > 0)
             {
                 var first8 = binNoSpace.Substring(0, 8);
                 binNoSpace = binNoSpace.Substring(8);
                 var number = Convert.ToInt32(first8, 2);
-                plainResult += (char)number;
+                plainResult.Append((char)number);
             }
 
-            return plainResult;
+            return plainResult.ToString();
         }
 
         /// <summary>
