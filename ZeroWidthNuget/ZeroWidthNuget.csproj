@@ -1,7 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PackageId>zero-width-nuget</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Nick, Lisanne, Tobias en Kevin</Authors>
+    <Company>Zero-Width-Whitespace</Company>
+    <PackageDescription>This package adds Zero-Width Whitespace Encoding functionality!</PackageDescription>
+    <RepositoryUrl>https://github.com/Zero-Width-Whitespace/zero-width-nuget</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
