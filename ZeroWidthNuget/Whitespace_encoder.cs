@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -69,29 +68,14 @@ namespace ZeroWidthApi
         public string Encode(string str)
         {
             string binString = ToBinaryString(str);
-            char[] binCharArr = binString.ToCharArray();
-            List<char> zeroWidthList = new List<char>();
 
-            foreach (char ch in binCharArr)
-            {
-                
-                switch (ch)
-                {
-                    case '\u0030':
-                        zeroWidthList.Add('\u200B');
-                        break;
+            string encodeText = new StringBuilder(binString)
+                .Replace('\u0030', '\u200B')
+                .Replace('\u0031', '\u200C')
+                .Replace('\u0020', '\u200D')
+                .ToString();
 
-                    case '\u0031':
-                        zeroWidthList.Add('\u200C');
-                        break;
-
-                    case '\u0020':
-                        zeroWidthList.Add('\u200D');
-                        break;
-                }
-            }
-
-            return string.Join("", zeroWidthList);
+            return encodeText;
         }
 
         /// <summary>
@@ -101,37 +85,24 @@ namespace ZeroWidthApi
         /// <returns> The decoded plaintext</returns>
         public string Decode(string zeroWidthText)
         {
-            List<char> filtered = new List<char>();
-            List<char> result = new List<char>();
-
+            StringBuilder filtered = new StringBuilder();
+            
             foreach(char c in zeroWidthText)
             {
                 if (c == '\u200B' || c == '\u200C' || c == '\u200D')
                 {
-                    filtered.Add(c);
+                    filtered.Append(c);
                 }
             }
 
-            foreach(char ch in filtered)
-            {
+            string filterString = filtered.ToString();
+            string decodeBinText = new StringBuilder(filterString)
+                .Replace('\u200B', '\u0030')
+                .Replace('\u200C', '\u0031')
+                .Replace('\u200D', '\u0020')
+                .ToString();
 
-                switch (ch)
-                {
-                    case '\u200B':
-                        result.Add('\u0030');
-                        break;
-
-                    case '\u200C':
-                        result.Add('\u0031');
-                        break;
-
-                    case '\u200D':
-                        result.Add('\u0020');
-                        break;
-                }
-            }
-
-            return BinaryToString(string.Join("", result));           
+            return BinaryToString(decodeBinText);           
         }
 
     }        
