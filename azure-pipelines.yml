@@ -15,7 +15,17 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: SonarCloudPrepare@1
+  displayName: 'Prepare SonarCloud'
+  inputs:
+    SonarCloud: 'Kevins Sonarcloud'
+    organization: 'zero-width-whitespace'
+    scannerMode: 'MSBuild'
+    projectKey: 'Zero-Width-Whitespace_zero-width-nuget'
+
 - task: NuGetToolInstaller@1
+  displayName: 'Install NuGet Tool'
+
 
 - task: NuGetCommand@2
   displayName: 'Nuget Restore'
@@ -24,9 +34,19 @@ steps:
     restoreSolution: '**/*.sln'
     feedsToUse: 'select'
     vstsFeed: '030285f2-9ddf-4603-8fd3-7d2f5b4a3766/acb34b7f-6641-4c4f-a2ee-ff1c27d5f61d'
+    
+- task: VSBuild@1
+  displayName: 'Visual Studio Build'
+  inputs:
+    solution: '**\*.sln'
+    vsVersion: '16.0'
+    restoreNugetPackages: false
+    
+- task: SonarCloudAnalyze@1
+  displayName: 'Analyze SonarCloud'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build'
+  displayName: 'Nuget Release Build'
   inputs:
     arguments: '-c Release'
     command: 'build'
